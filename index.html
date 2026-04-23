@@ -11,76 +11,80 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-body { margin:0; font-family:Inter,sans-serif; background:#000; color:#222; }
-.overlay { background:rgba(0,0,0,0.6); min-height:100vh; padding:30px; }
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  background: #000;
+}
 
-.container { max-width:1000px; margin:auto; background:#fff; border-radius:12px; overflow:hidden; }
+.overlay {
+  background: rgba(0,0,0,0.6);
+  min-height: 100vh;
+  padding: 30px;
+}
 
-section { padding:30px; border-bottom:1px solid #eee; }
+.container {
+  max-width: 1000px;
+  margin: auto;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
 
-h2 { margin-bottom:20px; }
+section {
+  padding: 30px;
+  border-bottom: 1px solid #eee;
+}
 
+h2 { margin-bottom: 20px; }
+
+/* GALERIA */
 .gallery {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+  gap: 10px;
 }
 
 .gallery img {
-  width:100%;
-  border-radius:8px;
-  cursor:pointer;
-  transition:0.3s;
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.gallery img:hover { transform:scale(1.03); }
+.gallery img:hover {
+  transform: scale(1.03);
+}
 
 /* LIGHTBOX */
 .lightbox {
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.95);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
 }
 
-.lightbox.active { display:flex; }
+.lightbox.active {
+  display: flex;
+}
 
 .lightbox img {
-  max-width:90%;
-  max-height:85vh;
-  border-radius:10px;
+  max-width: 90%;
+  max-height: 90vh;
+  border-radius: 10px;
 }
 
 .close {
-  position:absolute;
-  top:20px;
-  right:30px;
-  font-size:40px;
-  color:white;
-  cursor:pointer;
-}
-
-.nav {
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:50px;
-  color:white;
-  cursor:pointer;
-  user-select:none;
-}
-
-.prev { left:30px; }
-.next { right:30px; }
-
-.counter {
-  position:absolute;
-  bottom:20px;
-  color:white;
-  font-size:14px;
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+  user-select: none;
 }
 </style>
 </head>
@@ -91,6 +95,31 @@ h2 { margin-bottom:20px; }
 
 <div class="container">
 
+<!-- OPIS -->
+<section>
+<h2>Opis nieruchomości</h2>
+
+<p>
+🌿 Twoje miejsce blisko natury – działki rekreacyjne przy lesie 🌿<br><br>
+
+Szukasz przestrzeni, w której naprawdę odpoczniesz?  
+Ta oferta jest właśnie dla Ciebie.<br><br>
+
+Działki położone są tuż przy lesie, w spokojnej i zielonej okolicy.  
+Obowiązuje MPZP – możliwość budowy domu do 9 m wysokości.<br><br>
+
+Wyobraź sobie poranki z kawą na tarasie i śpiew ptaków zamiast miasta.
+</p>
+
+<ul>
+<li>Tuż przy lesie</li>
+<li>Media: prąd i woda</li>
+<li>Możliwość zabudowy do 9 m</li>
+</ul>
+
+</section>
+
+<!-- GALERIA -->
 <section>
 <h2>Galeria</h2>
 
@@ -117,13 +146,10 @@ h2 { margin-bottom:20px; }
 </div>
 </div>
 
-<!-- LIGHTBOX -->
+<!-- LIGHTBOX (POWIĘKSZENIE ZDJĘCIA) -->
 <div class="lightbox" id="lightbox">
   <span class="close" id="close">&times;</span>
-  <span class="nav prev" id="prev">&#10094;</span>
   <img id="lightbox-img">
-  <span class="nav next" id="next">&#10095;</span>
-  <div class="counter" id="counter"></div>
 </div>
 
 <script>
@@ -131,45 +157,32 @@ const images = document.querySelectorAll('#gallery img');
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightbox-img');
 const closeBtn = document.getElementById('close');
-const nextBtn = document.getElementById('next');
-const prevBtn = document.getElementById('prev');
-const counter = document.getElementById('counter');
 
-let index = 0;
-
-function showImage(i){
-  index = i;
-  lightboxImg.src = images[i].src;
-  counter.textContent = (i+1) + " / " + images.length;
-  lightbox.classList.add('active');
-}
-
-images.forEach((img,i)=>{
-  img.addEventListener('click',()=>showImage(i));
+// otwieranie zdjęcia
+images.forEach(img => {
+  img.addEventListener('click', () => {
+    lightbox.classList.add('active');
+    lightboxImg.src = img.src;
+  });
 });
 
-closeBtn.onclick = ()=> lightbox.classList.remove('active');
+// zamykanie X
+closeBtn.addEventListener('click', () => {
+  lightbox.classList.remove('active');
+});
 
-nextBtn.onclick = ()=> {
-  index = (index+1)%images.length;
-  showImage(index);
-};
+// klik poza zdjęciem
+lightbox.addEventListener('click', (e) => {
+  if (e.target === lightbox) {
+    lightbox.classList.remove('active');
+  }
+});
 
-prevBtn.onclick = ()=> {
-  index = (index-1+images.length)%images.length;
-  showImage(index);
-};
-
-lightbox.onclick = (e)=>{
-  if(e.target === lightbox) lightbox.classList.remove('active');
-};
-
-document.addEventListener('keydown', (e)=>{
-  if(!lightbox.classList.contains('active')) return;
-
-  if(e.key === "Escape") lightbox.classList.remove('active');
-  if(e.key === "ArrowRight") nextBtn.click();
-  if(e.key === "ArrowLeft") prevBtn.click();
+// ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === "Escape") {
+    lightbox.classList.remove('active');
+  }
 });
 </script>
 
